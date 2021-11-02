@@ -6,13 +6,14 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Render\Markup;
 
+use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotificationsInterface;
 
 /**
  * Class Pay U LA controller.
  *
  * This class manages all about 'Pay U  Responses'.
  */
-class PayulaController extends ControllerBase  {
+class PayulaController extends ControllerBase implements SupportsNotificationsInterface {
 
   /**
    * Function return.
@@ -80,6 +81,38 @@ class PayulaController extends ControllerBase  {
       ];
     return $build;
 
+  }
+
+  /**
+   * Processes the notification request.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
+   * @return \Symfony\Component\HttpFoundation\Response|null
+   *   The response, or NULL to return an empty HTTP 200 response.
+   */
+  public function onNotify(Request $request){
+
+    $notification = $request->getContent();
+    //Payplug::setSecretKey($this->api_key);
+    //$resource = \Payplug\Notification::treat($notification, $authentication = null);
+
+    //$metadata = $resource->metadata;
+    $payment_storage = $this->entityTypeManager->getStorage('commerce_payment');
+    $payment = $payment_storage->create([
+      'state' => 'authorization',
+      //'amount' => new Price($resource->amount / 100, $resource->currency),
+      'payment_gateway' => $this->entityId,
+      //'order_id' => $metadata['order_id'],
+      //'test' => $this->getMode() == 'test',
+      //'remote_id' => $resource->id,
+      //'remote_state' => empty($resource->failure) ? 'paid' : $resource->failure->code,
+      'authorized' => $this->time->getRequestTime(),
+    ]);
+    $payment->save();
+
+    return false;
   }
 
 }

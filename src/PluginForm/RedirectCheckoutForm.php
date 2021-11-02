@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pay_redirect_payula\PluginForm;
+namespace Drupal\pay_with_payula\PluginForm;
 
 use Drupal\commerce_payment\Exception\PaymentGatewayException;
 use Drupal\commerce_payment\PluginForm\PaymentOffsiteForm as BasePaymentOffsiteForm;

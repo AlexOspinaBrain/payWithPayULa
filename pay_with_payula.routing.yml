@@ -11,7 +11,7 @@ pay_redirect_payula.confirmPayuLA:
   path: '/confirmPayuLA'
   methods: [POST]
   defaults:
-    _controller: '\Drupal\pay_with_payula\Controller\PayulaController:confirm'
+    _controller: '\Drupal\pay_with_payula\Controller\PayulaController:onNotify'
     _title: 'Confirmacion de Pago'
   requirements:
     _permission: 'access content'

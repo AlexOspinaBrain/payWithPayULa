@@ -21,7 +21,7 @@ use Drupal\Core\Form\FormStateInterface;
  *   },
  * )
  */
-class RedirectCheckout extends OffsitePaymentGatewayBase {
+class RedirectCheckout extends OffsitePaymentGatewayBase  {
 
   public function defaultConfiguration() {
     return [
