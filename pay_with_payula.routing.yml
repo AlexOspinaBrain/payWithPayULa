@@ -1,0 +1,17 @@
+pay_with_payula.returnPayuLA:
+  path: '/returnPayuLA'
+  methods: [GET]
+  defaults:
+    _controller: '\Drupal\pay_with_payula\Controller\PayulaController:return'
+    _title: 'Respuesta de Pago'
+  requirements:
+    _permission: 'access content'
+
+pay_redirect_payula.confirmPayuLA:
+  path: '/confirmPayuLA'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\pay_with_payula\Controller\PayulaController:confirm'
+    _title: 'Confirmacion de Pago'
+  requirements:
+    _permission: 'access content'
