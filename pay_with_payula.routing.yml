@@ -7,7 +7,7 @@ pay_with_payula.returnPayuLA:
   requirements:
     _permission: 'access content'
 
-pay_redirect_payula.confirmPayuLA:
+pay_with_payula.confirmPayuLA:
   path: '/confirmPayuLA'
   methods: [POST]
   defaults:
