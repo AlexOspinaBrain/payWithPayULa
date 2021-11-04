@@ -4,15 +4,13 @@ namespace Drupal\pay_with_payula\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
-use Drupal\Core\Render\Markup;
 use Drupal\commerce_price\Price;
-
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotificationsInterface;
 
 /**
  * Class Pay U LA controller.
  *
- * This class manages all about 'Pay U  Responses'.
+ * This class manages all about 'Pay U LA Responses'.
  */
 class PayulaController extends ControllerBase implements SupportsNotificationsInterface {
 
@@ -94,39 +92,23 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
    */
   public function onNotify(Request $request){
 
-    //$notification = $request->getContent();
-    $notification = $request->get('popo');
-    //Payplug::setSecretKey($this->api_key);
-    //$resource = \Payplug\Notification::treat($notification, $authentication = null);
+    $notification = $request->query->all();
 
-    //$metadata = $resource->metadata;
+    $paymentPlugin =  \Drupal::config('commerce_payment.commerce_payment_gateway.payu_la');
+
+
     $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');
-
     $payment = $payment_storage->create([
-
       'type' => 'payment_default',
       'state' => 'completed',
-      'payment_gateway' => 'payu_la',
-      'payment_gateway_mode' => 'test',
-      'amount' => new Price(5000, 'COP'),
-      //'payment_gateway' => $this->entityId,
-      ///'authorized' => 895653232,
-      //'authorized' => $this->time->getRequestTime(),
-      ///'completed' => 895653232,
-      ///'remote_id' => 4, //state_pol
-      //'remote_id' => $resource->id,
-      ///'remote_state' => 'APPROVED',
-      //'remote_state' => empty($resource->failure) ? 'paid' : $resource->failure->code,
-      'order_id' => 34,
-      //'order_id' => $metadata['order_id'],
-      ///'amount__number' => 10000,000000,
-      //'amount' => new Price($resource->amount / 100, $resource->currency),
-      ///'amount__currency_code' => 'COP',
-      ///'refunded_amount__number' => 0,
-      ///'refunded_amount__currency_code' => 'COP',
-      ///'test' => 1,
-      //'test' => $this->getMode() == 'test',
+      'payment_gateway' => $paymentPlugin->get('id'),
+      'payment_gateway_mode' => $paymentPlugin->getOriginal()['configuration']['mode'],
+      'test' => $paymentPlugin->getOriginal()['configuration']['mode'] == 'test',
 
+      'amount' => new Price($notification['value'], $notification['currency']),
+      'remote_id' => $notification['reference_pol'],
+      'remote_state' => $notification['reference_code_pol'],
+      'order_id' => $notification['reference_sale'],
 
 
     ]);
