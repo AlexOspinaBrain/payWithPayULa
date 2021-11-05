@@ -5,12 +5,18 @@ use Drupal\Core\Routing\RouteMatchInterface;
 /**
  * Implements hook_help().
  */
-function hi_there_help($route_name, RouteMatchInterface $route_match) {
+function pay_with_payula_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'help.page.pay_with_payula':
 
-      $output = 'Hola desde help';
-
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The <strong>Pay with PayU Latam module</strong> is used to create a payment gateway that
+        allows you to configure your Drupal Commerce store for the use of the
+        <em>PayU Latam</em> payment provider.') . '</p>';
+      $output .= '<h3>' . t('Important') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<p>' . t('When configuring the new payment gateway you must make sure to create it
+        with the name of <strong>PayU LA</strong> so that the machine name is <em>payu_la</em>. <strong>This is mandatory</strong>.') . '</p>';
       return $output;
   }
 }
