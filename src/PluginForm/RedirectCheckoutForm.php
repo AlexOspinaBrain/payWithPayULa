@@ -31,7 +31,14 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     $data['tax'] = "0";
     $data['taxReturnBase'] = "0";
 
-    //$data['signature'] = "7ee7cf808ce6a39b17481c54f2c57acc";
+    $sign = md5(
+      $configuration['api_key'] . '~' .
+      $configuration['merchantId'] . '~' .
+      $payment->getOrderId() . '~' .
+      $payment->getAmount()->getNumber() . '~' .
+      $payment->getAmount()->getCurrencyCode()
+    );
+    $data['signature'] = $sign;
 
     $order = $payment->getOrder();
     $billing_address = $order->getBillingProfile()->get('address')->first();
@@ -42,10 +49,10 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
 
     $data['buyerEmail'] = $payment->getOrder()->getEmail();
 
-    $data['test'] = "1";
+    $data['test'] = $configuration['mode'] == 'test';
 
-    $data['responseUrl'] = "http://drupal.lc/respuestaPayuLA";
-    $data['confirmationUrl'] = "http://drupal.lc/confirmPayuLA";
+    $data['responseUrl'] = 'https://' . $_SERVER['HTTP_HOST'] ."/respuestaPayuLA";
+    $data['confirmationUrl'] = 'https://' . $_SERVER['HTTP_HOST'] ."/confirmPayuLA";
 
     return $this->buildRedirectForm(
         $form,

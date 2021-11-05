@@ -24,6 +24,10 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
   }
   /**
    * Function return.
+   *
+   * @param \Symfony\Component\HttpFoundation\Request $request
+   *   The request.
+   *
    */
   public function return(Request $request){
 
@@ -69,7 +73,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
   }
 
-  private function htmlresponse(Array $data){
+  private function htmlresponse(array $data){
     $rows = [
         [ t('Pay method: ') . $data['merchant_name'] ],
         [ t('Entity: ') . $data['lapResponseCode'] ],
@@ -111,7 +115,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
       $notification['sign']
     );
 
-    if ($validate && $notification['state_pol'] == '4'){
+    if ($validate && $notification['state_pol'] == '4' && $request->getScheme() == 'https'){
       $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');
       $payment = $payment_storage->create([
         'type' => 'payment_default',
@@ -147,9 +151,9 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
    * @return bool
    */
   private function validationSignature(
-      String $merchant_id, String $reference_sale,
-      String $value, String $currency, Int $state_pol, String $sign
-  ) : Bool {
+      string $merchant_id, string $reference_sale,
+      string $value, string $currency, int $state_pol, string $sign
+  ) : bool {
 
     $valArray = explode('.', $value);
     $decPart='';
