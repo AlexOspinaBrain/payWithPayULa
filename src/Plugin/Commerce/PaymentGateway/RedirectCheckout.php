@@ -63,7 +63,7 @@ class RedirectCheckout extends OffsitePaymentGatewayBase  {
       $form['urlProvider'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Url Provider'),
-        '#description' => $this->t('URL PayU LA, depends if is test or live.'),
+        '#description' => $this->t('URL PayU LA, it depends if it is test or live, also include the schema in the URL: (http or https)'),
         '#default_value' => $this->configuration['urlProvider'],
         '#required' => TRUE,
       ];
@@ -77,5 +77,6 @@ class RedirectCheckout extends OffsitePaymentGatewayBase  {
     $this->configuration['merchantId'] = $values['merchantId'];
     $this->configuration['api_key'] = $values['api_key'];
     $this->configuration['accountId'] = $values['accountId'];
+    $this->configuration['urlProvider'] = $values['urlProvider'];
   }
 }

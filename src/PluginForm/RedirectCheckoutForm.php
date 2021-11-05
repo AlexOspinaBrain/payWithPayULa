@@ -57,7 +57,7 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     return $this->buildRedirectForm(
         $form,
         $form_state,
-        'https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/',
+        $configuration['urlProvider'],
         $data,
         self::REDIRECT_POST
     );

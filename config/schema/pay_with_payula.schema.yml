@@ -10,3 +10,6 @@ commerce_payment.commerce_payment_gateway.plugin.redirect_checkout:
     accountId:
       type: string
       label: 'Account Id'
+    urlProvider:
+      type: string
+      label: 'Url Provider'
