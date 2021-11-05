@@ -6,6 +6,7 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotificationsInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Pay U LA controller.
@@ -14,6 +15,13 @@ use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotifications
  */
 class PayulaController extends ControllerBase implements SupportsNotificationsInterface {
 
+  private $paymentPlugin;
+
+  public function __construct()
+  {
+        /** The payment setting should have been like 'payu_la'  */
+        $this->paymentPlugin =  \Drupal::config('commerce_payment.commerce_payment_gateway.payu_la');
+  }
   /**
    * Function return.
    */
@@ -94,27 +102,72 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
     $notification = $request->query->all();
 
-    $paymentPlugin =  \Drupal::config('commerce_payment.commerce_payment_gateway.payu_la');
+    $validate = $this->validationSignature(
+      $notification['merchant_id'],
+      $notification['reference_sale'],
+      $notification['value'],
+      $notification['currency'],
+      $notification['state_pol'],
+      $notification['sign']
+    );
 
+    if ($validate && $notification['state_pol'] == '4'){
+      $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');
+      $payment = $payment_storage->create([
+        'type' => 'payment_default',
+        'state' => 'completed',
+        'payment_gateway' => $this->paymentPlugin->get('id'),
+        'payment_gateway_mode' => $this->paymentPlugin->getOriginal()['configuration']['mode'],
+        'test' => $this->paymentPlugin->getOriginal()['configuration']['mode'] == 'test',
 
-    $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');
-    $payment = $payment_storage->create([
-      'type' => 'payment_default',
-      'state' => 'completed',
-      'payment_gateway' => $paymentPlugin->get('id'),
-      'payment_gateway_mode' => $paymentPlugin->getOriginal()['configuration']['mode'],
-      'test' => $paymentPlugin->getOriginal()['configuration']['mode'] == 'test',
+        'amount' => new Price($notification['value'], $notification['currency']),
+        'remote_id' => $notification['reference_pol'],
+        'remote_state' => $notification['reference_code_pol'],
+        'order_id' => $notification['reference_sale'],
 
-      'amount' => new Price($notification['value'], $notification['currency']),
-      'remote_id' => $notification['reference_pol'],
-      'remote_state' => $notification['reference_code_pol'],
-      'order_id' => $notification['reference_sale'],
+      ]);
+      $payment->save();
 
+      return new Response();
+    } else {
+      return new Response('', Response::HTTP_NON_AUTHORITATIVE_INFORMATION);
+    }
+  }
 
-    ]);
-    $payment->save();
+  /**
+   * Validation Signature
+   *
+   * @var string $merchant_id
+   * @var string $reference_sale
+   * @var string $value
+   * @var string $currency
+   * @var int $state_pol
+   * @var string $sign
+   *
+   * @return bool
+   */
+  private function validationSignature(
+      String $merchant_id, String $reference_sale,
+      String $value, String $currency, Int $state_pol, String $sign
+  ) : Bool {
 
-    return null;
+    $valArray = explode('.', $value);
+    $decPart='';
+    if (isset($valArray[1])) {
+      $decPart = substr($valArray[1],1,1) != '0' ? substr($valArray[1],0,2) : substr($valArray[1],0,1) ;
+    }
+    $valNew = $decPart != '' ? $valArray[0] . '.' . $decPart : $valArray[0];
+
+    $signVerification = md5(
+      $this->paymentPlugin->getOriginal()['configuration']['api_key'] . '~' .
+      $merchant_id . '~' .
+      $reference_sale . '~' .
+      $valNew . '~' .
+      $currency . '~' .
+      $state_pol
+    );
+
+    return $signVerification === $sign;
   }
 
 }

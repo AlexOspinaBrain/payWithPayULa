@@ -2,9 +2,7 @@
 
 namespace Drupal\pay_with_payula\PluginForm;
 
-use Drupal\commerce_payment\Exception\PaymentGatewayException;
 use Drupal\commerce_payment\PluginForm\PaymentOffsiteForm as BasePaymentOffsiteForm;
-use Drupal\commerce_payment\Entity\PaymentInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
@@ -25,7 +23,7 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     $data['merchantId'] = $configuration['merchantId'];
     $data['accountId'] = $configuration['accountId'];
 
-    $data['referenceCode'] = $payment->getOrderId() . '-TiendaCuadernos';
+    $data['referenceCode'] = $payment->getOrderId();
     $data['description'] = "Venta Cuadernos";
 
     $data['currency'] = $payment->getAmount()->getCurrencyCode();
@@ -41,14 +39,13 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     $data['shippingAddress'] = $billing_address->getAddressLine1() . ' ' . $billing_address->getAddressLine2();
     $data['shippingCity'] = $billing_address->getLocality();
     $data['shippingCountry'] = $billing_address->getCountryCode();
-    //$data['telephone'] = $billing_address->first()->getCountryCode();
 
     $data['buyerEmail'] = $payment->getOrder()->getEmail();
 
     $data['test'] = "1";
 
     $data['responseUrl'] = "http://drupal.lc/respuestaPayuLA";
-    $data['confirmationUrl'] = "";
+    $data['confirmationUrl'] = "http://drupal.lc/confirmPayuLA";
 
     return $this->buildRedirectForm(
         $form,
