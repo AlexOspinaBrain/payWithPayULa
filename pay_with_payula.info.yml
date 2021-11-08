@@ -3,6 +3,8 @@ description: Provides functionality for pay with PayU Latam
 package: Custom
 type: module
 core_version_requirement: ^9
+interface translation project: pay_with_payula
+interface translation server pattern: modules/custom/pay_with_payula/translations/%project-%language.po
 
 dependencies:
   - commerce:commerce_payment
