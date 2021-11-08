@@ -75,17 +75,21 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
   private function htmlresponse(array $data){
     $rows = [
-        [ t('Pay method: ') . $data['merchant_name'] ],
-        [ t('Entity: ') . $data['lapResponseCode'] ],
-        [ t('Transaction result: ') . $data['lapTransactionState'] ],
-        [ t('Message: ') . $data['message'] ],
+        [ t('Pay method: ') , $data['merchant_name'] ],
+        [ t('Entity: ') , $data['lapResponseCode'] ],
+        [ t('Transaction result: ') , $data['lapTransactionState'] ],
+        [ t('Message: ') , $data['message'] ],
       ];
     $header = [
-        'title' => t('Purchase information'),
+        ['data' => t('Purchase information'),'colspan'=>2,],
       ];
+    /*$attributes = [
+      'style' => 'widht = 1%'
+    ];*/
     $build['table'] = [
         '#type' => 'table',
         '#header' => $header,
+        //'#attributes' => $attributes,
         '#rows' => $rows,
         '#empty' => t('No content has been found.'),
       ];
