@@ -11,3 +11,12 @@ msgstr ""
 
 msgid "Pay Method"
 msgstr "Metodo de pago"
+
+msgid "Entity"
+msgstr "Entidad"
+
+msgid "Transaction result"
+msgstr "Resuldato de la trandascción"
+
+msgid "Message"
+msgstr "Mensaje"
