@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotificationsInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Drupal\Core\Render\Markup;
 
 /**
  * Class Pay U LA controller.
@@ -77,10 +78,10 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
   private function htmlresponse(array $data){
     $rows = [
-        [ t('Pay method: ') , $data['merchant_name'] ],
-        [ t('Entity: ') , $data['lapResponseCode'] ],
-        [ t('Transaction result: ') , $data['lapTransactionState'] ],
-        [ t('Message: ') , $data['message'] ],
+        [ Markup::create('<strong>Pay Method</strong>'), $data['merchant_name'] ],
+        [  Markup::create('<strong>Entity</strong>') , $data['lapResponseCode'] ],
+        [  Markup::create('<strong>Transaction result:</strong>'), $data['lapTransactionState'] ],
+        [  Markup::create('<strong>Message:</strong>') , $data['message'] ],
       ];
     $header = [
         ['data' => t('Purchase information'),'colspan'=>2,],
