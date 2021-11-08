@@ -16,7 +16,7 @@ msgid "Entity"
 msgstr "Entidad"
 
 msgid "Transaction result"
-msgstr "Resuldato de la trandascción"
+msgstr "Resultado de la transacción"
 
 msgid "Message"
 msgstr "Mensaje"
