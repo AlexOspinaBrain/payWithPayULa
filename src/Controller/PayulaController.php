@@ -84,7 +84,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
         [  Markup::create('<strong>Message:</strong>') , $data['message'] ],
       ];
     $header = [
-        ['data' => t('Purchase information'),'colspan'=>2,],
+        ['colspan'=>2,],
       ];
     /*$attributes = [
       'style' => 'widht = 1%'
