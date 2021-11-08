@@ -31,24 +31,24 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
    */
   public function return(Request $request){
 
-    $data['transactionState']=$request->query->get('transactionState');
-    $data['polResponseCode']=$request->query->get('polResponseCode');
+    $data['transactionState']=$request->query->get('transactionState') ?? '';
+    $data['polResponseCode']=$request->query->get('polResponseCode') ?? '';
 
-    $data['merchantId']=$request->query->get('merchantId');
-    $data['referenceCode']=$request->query->get('referenceCode');
-    $data['signature=']=$request->query->get('signature');
+    $data['merchantId']=$request->query->get('merchantId') ?? '';
+    $data['referenceCode']=$request->query->get('referenceCode') ?? '';
+    $data['signature=']=$request->query->get('signature') ?? '';
 
-    $data['lapPaymentMethodType']=$request->query->get('lapPaymentMethodType');
+    $data['lapPaymentMethodType']=$request->query->get('lapPaymentMethodType') ?? '';
 
-    $data['merchant_name']=$request->query->get('merchant_name');
-    $data['merchant_address']=$request->query->get('merchant_address');
-    $data['telephone']=$request->query->get('telephone');
-    $data['merchant_url']=$request->query->get('merchant_url');
-    $data['description']=$request->query->get('description');
+    $data['merchant_name']=$request->query->get('merchant_name') ?? '';
+    $data['merchant_address']=$request->query->get('merchant_address') ?? '';
+    $data['telephone']=$request->query->get('telephone') ?? '';
+    $data['merchant_url']=$request->query->get('merchant_url') ?? '';
+    $data['description']=$request->query->get('description') ?? '';
 
-    $data['lapTransactionState']=$request->query->get('lapTransactionState');
-    $data['lapResponseCode']=$request->query->get('lapResponseCode');
-    $data['message']=$request->query->get('message');
+    $data['lapTransactionState']=$request->query->get('lapTransactionState') ?? '';
+    $data['lapResponseCode']=$request->query->get('lapResponseCode') ?? '';
+    $data['message']=$request->query->get('message') ?? '';
 
     if ($data['transactionState'] == 4 ) {
         $data['message']  = "Transaction approved";
@@ -66,9 +66,11 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
         $data['message'] = "Pending payment";
     }
 
+    $renderr = $this->htmlresponse($data);
+
     return [
         '#type' => '#markup',
-        '#markup' => render($this->htmlresponse($data))
+        '#markup' => render($renderr),
       ];
 
   }
