@@ -24,7 +24,7 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     $data['accountId'] = $configuration['accountId'];
 
     $data['referenceCode'] = $payment->getOrderId();
-    $data['description'] = "Venta Cuadernos";
+    $data['description'] = "KOKORO SELL";
 
     $data['currency'] = $payment->getAmount()->getCurrencyCode();
     $data['amount'] = $payment->getAmount()->getNumber();
@@ -51,7 +51,7 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
 
     $data['test'] = $configuration['mode'] == 'test';
 
-    $data['responseUrl'] = 'https://' . $_SERVER['HTTP_HOST'] ."/respuestaPayuLA";
+    $data['responseUrl'] = 'https://' . $_SERVER['HTTP_HOST'] ."/returnPayuLA";
     $data['confirmationUrl'] = 'https://' . $_SERVER['HTTP_HOST'] ."/confirmPayuLA";
 
     return $this->buildRedirectForm(

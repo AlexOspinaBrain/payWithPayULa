@@ -7,7 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Drupal\commerce_price\Price;
 use Drupal\commerce_payment\Plugin\Commerce\PaymentGateway\SupportsNotificationsInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Drupal\Core\Render\Markup;
+
 
 /**
  * Class Pay U LA controller.
@@ -68,7 +70,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
     }
 
     $renderr = $this->htmlresponse($data);
-
+ 
     return [
         '#type' => '#markup',
         '#markup' => render($renderr),
@@ -78,8 +80,8 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
   private function htmlresponse(array $data){
     $rows = [
-        [ Markup::create('<strong>'.t('Pay Method').' : </strong>'), $data['merchant_name'] ],
-        [  Markup::create('<strong>'.t('Entity').' : </strong>') , $data['lapResponseCode'] ],
+        [ Markup::create('<strong>'.t('Store').' : </strong>'), $data['merchant_name'] ],
+        [  Markup::create('<strong>'.t('Reference Code').' : </strong>') , $data['referenceCode'] ],
         [  Markup::create('<strong>'.t('Transaction result').' : </strong>'), $data['lapTransactionState'] ],
         [  Markup::create('<strong>'.t('Message').' : </strong>') , $data['message'] ],
       ];
@@ -113,14 +115,15 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
     $notification = $request->query->all();
 
-    $validate = $this->validationSignature(
-      $notification['merchant_id'],
-      $notification['reference_sale'],
-      $notification['value'],
-      $notification['currency'],
-      $notification['state_pol'],
-      $notification['sign']
-    );
+     $validate = $this->validationSignature(
+        $notification['merchant_id'],
+        $notification['reference_sale'],
+        $notification['value'],
+        $notification['currency'],
+        $notification['state_pol'],
+        $notification['sign']);
+    
+
 
     if ($validate && $notification['state_pol'] == '4' && $request->getScheme() == 'https'){
       $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');

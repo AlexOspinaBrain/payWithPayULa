@@ -20,3 +20,18 @@ msgstr "Resultado de la transacción"
 
 msgid "Message"
 msgstr "Mensaje"
+
+msgid "Store"
+msgstr "Tienda"
+
+msgid "Reference Code"
+msgstr "Codigo de Referencia"
+
+msgid "Pending payment"
+msgstr "Pago Pendiente"
+
+msgid "Transaction rejected"
+msgstr "Transacción Rechazada"
+
+msgid "Transaction approved"
+msgstr "Transacción Aprovada"
