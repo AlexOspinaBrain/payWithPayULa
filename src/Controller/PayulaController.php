@@ -80,10 +80,10 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
 
   private function htmlresponse(array $data){
     $rows = [
-        [ Markup::create('<strong>'.t('Store').' : </strong>'), $data['merchant_name'] ],
-        [  Markup::create('<strong>'.t('Reference Code').' : </strong>') , $data['referenceCode'] ],
-        [  Markup::create('<strong>'.t('Transaction result').' : </strong>'), $data['lapTransactionState'] ],
-        [  Markup::create('<strong>'.t('Message').' : </strong>') , $data['message'] ],
+        [ Markup::create('<strong>'.t('Store').' : </strong>'), t($data['merchant_name']) ],
+        [  Markup::create('<strong>'.t('Reference Code').' : </strong>') , t($data['referenceCode']) ],
+        [  Markup::create('<strong>'.t('Transaction result').' : </strong>'), t($data['lapTransactionState']) ],
+        [  Markup::create('<strong>'.t('Message').' : </strong>') , t($data['message']) ],
       ];
     $header = [
         ['colspan'=>2,],
