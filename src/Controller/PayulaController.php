@@ -52,6 +52,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
     $data['lapTransactionState']=$request->query->get('lapTransactionState') ?? '';
     $data['lapResponseCode']=$request->query->get('lapResponseCode') ?? '';
     $data['message']=$request->query->get('message') ?? '';
+    $data['amount']=$request->query->get('TX_VALUE') ?? '';
 
     if ($data['transactionState'] == 4 ) {
         $data['message']  = "Transaction approved";
@@ -82,7 +83,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
     $rows = [
         [ Markup::create('<strong>'.t('Store').' : </strong>'), t($data['merchant_name']) ],
         [  Markup::create('<strong>'.t('Reference Code').' : </strong>') , t($data['referenceCode']) ],
-        [  Markup::create('<strong>'.t('Transaction result').' : </strong>'), t($data['lapTransactionState']) ],
+        [  Markup::create('<strong>'.t('Amount').' : </strong>'), '$ ' . number_format($data['amount'] ) ],
         [  Markup::create('<strong>'.t('Message').' : </strong>') , t($data['message']) ],
       ];
     $header = [

@@ -35,3 +35,6 @@ msgstr "Transacción Rechazada"
 
 msgid "Transaction approved"
 msgstr "Transacción Aprovada"
+
+msgid "Amount"
+msgstr "Monto Total"
