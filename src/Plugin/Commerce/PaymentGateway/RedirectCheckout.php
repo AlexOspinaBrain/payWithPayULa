@@ -44,11 +44,19 @@ class RedirectCheckout extends OffsitePaymentGatewayBase  {
       '#required' => TRUE,
     ];
 
-    $form['api_key'] = [
+    $form['apiKey'] = [
       '#type' => 'textfield',
       '#title' => $this->t('API key'),
       '#description' => $this->t('The API key for the same user as used in PayU LA.'),
-      '#default_value' => $this->configuration['api_key'],
+      '#default_value' => $this->configuration['apiKey'],
+      '#required' => TRUE,
+    ];
+
+    $form['apiLogin'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('API Login'),
+      '#description' => $this->t('The API Login for the same user as used in PayU LA.'),
+      '#default_value' => $this->configuration['apiLogin'],
       '#required' => TRUE,
     ];
 
@@ -68,6 +76,13 @@ class RedirectCheckout extends OffsitePaymentGatewayBase  {
         '#required' => TRUE,
       ];
 
+      $form['urlReport'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Url Report'),
+        '#description' => $this->t('Queries API URL, it is provided by PayU LA'),
+        '#default_value' => $this->configuration['urlReport'],
+        '#required' => TRUE,
+      ];
     return $form;
   }
 
@@ -75,8 +90,10 @@ class RedirectCheckout extends OffsitePaymentGatewayBase  {
     parent::submitConfigurationForm($form, $form_state);
     $values = $form_state->getValue($form['#parents']);
     $this->configuration['merchantId'] = $values['merchantId'];
-    $this->configuration['api_key'] = $values['api_key'];
+    $this->configuration['apiKey'] = $values['apiKey'];
+    $this->configuration['apiLogin'] = $values['apiLogin'];
     $this->configuration['accountId'] = $values['accountId'];
     $this->configuration['urlProvider'] = $values['urlProvider'];
+    $this->configuration['urlReport'] = $values['urlReport'];
   }
 }

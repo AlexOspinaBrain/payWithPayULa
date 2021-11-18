@@ -32,7 +32,7 @@ class RedirectCheckoutForm  extends BasePaymentOffsiteForm  {
     $data['taxReturnBase'] = "0";
 
     $sign = md5(
-      $configuration['api_key'] . '~' .
+      $configuration['apiKey'] . '~' .
       $configuration['merchantId'] . '~' .
       $payment->getOrderId() . '~' .
       $payment->getAmount()->getNumber() . '~' .

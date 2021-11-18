@@ -126,7 +126,8 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
     
 
 
-    if ($validate && $notification['state_pol'] == '4' && $request->getScheme() == 'https'){
+    //if ($validate && $notification['state_pol'] == '4' && $request->getScheme() == 'https'){
+    if ($validate && $notification['state_pol'] == '4'){
       $payment_storage = $this->entityTypeManager()->getStorage('commerce_payment');
       $payment = $payment_storage->create([
         'type' => 'payment_default',
@@ -174,7 +175,7 @@ class PayulaController extends ControllerBase implements SupportsNotificationsIn
     $valNew = $decPart != '' ? $valArray[0] . '.' . $decPart : $valArray[0];
 
     $signVerification = md5(
-      $this->paymentPlugin->getOriginal()['configuration']['api_key'] . '~' .
+      $this->paymentPlugin->getOriginal()['configuration']['apiKey'] . '~' .
       $merchant_id . '~' .
       $reference_sale . '~' .
       $valNew . '~' .
