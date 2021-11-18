@@ -1,6 +1,8 @@
 <?php
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\pay_with_payula\Controller\PayulaController;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Implements hook_help().
@@ -21,3 +23,62 @@ function pay_with_payula_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+/**
+ * Implements hook_cron().
+ */
+
+function pay_with_payula_cron () {
+
+  $orders = \Drupal::entityTypeManager()
+    ->getStorage('commerce_order')
+    ->loadByProperties([
+      'state' => 'draft',
+      'locked' => 1,
+    ]);
+
+  $payula = new PayulaController; 
+  $client = \Drupal::httpClient();
+
+  /**Recorre las ordenes pendientes */
+  $idOrders = array_keys($orders);
+  foreach ($idOrders as $idOrder){
+
+    $res = $client->post(
+      'https://api.payulatam.com/reports-api/4.0/service.cgi',
+      [
+        'json' => [
+          'test'=>false,
+          'language'=>'es',
+          'command'=> 'ORDER_DETAIL_BY_REFERENCE_CODE',
+          'merchant' =>[
+            'apiLogin'=>'wICKsDReLHjKA55',
+            'apiKey'=>'Gx4i62k95k4tKUd0xriNGWquad',
+          ],
+          'details'=>[
+            'referenceCode'=> $idOrder
+          ],
+        ],
+      ],
+    );
+
+    $body =  simplexml_load_string($res->getBody());
+    $json = json_encode($body);
+    $arr = json_decode($json, true);
+    
+    /**Pregunta si se pago la orden */
+    if($res->getStatusCode() == 200 
+      && !$arr['result'] 
+      && $arr['result']['payload']['order']['status'] == 'CAPTURED') {
+      
+      /**Para actualizar si el pago es correcto */
+      $path = '/confirmPayuLA?payment_method=2&value=159000&currency=COP&reference_pol=555&reference_code_pol=APPROVED&reference_sale=229&sign=df3a4244f089b4ddba3a3dc5cc411934&state_pol=4&merchant_id=508029';
+      $request = Request::create(
+        $path,
+        'POST',
+      );
+      $payula->onNotify($request);
+    }
+  } // end for
+  $alex=1;
+
+}
